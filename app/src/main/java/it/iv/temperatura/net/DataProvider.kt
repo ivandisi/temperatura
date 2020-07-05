@@ -16,7 +16,7 @@ object DataProvider {
     var external: OpenWeatherData? = null
 
     fun runRequest(callback: DataProviderInterface) {
-        OpenWeatherProvider.create().getData(OpenWeatherUser.getInstance().getToken(), object:
+        OpenWeatherProvider.create().getData(OpenWeatherUser.getInstance().getCity(), OpenWeatherUser.getInstance().getToken(), object:
             OpenWeatherInterface {
             override fun onSuccess(result: OpenWeatherData?){
                 external = result

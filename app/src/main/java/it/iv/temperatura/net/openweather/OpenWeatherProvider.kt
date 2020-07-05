@@ -15,9 +15,9 @@ class OpenWeatherProvider{
         fun create(): OpenWeatherProvider = OpenWeatherProvider()
     }
 
-    fun getData(license: String, result: OpenWeatherInterface) {
+    fun getData(city: String, license: String, result: OpenWeatherInterface) {
         val request = NetDataService.buildService(URL, OpenWeatherApi::class.java)
-        val call = request.getWeather(license)
+        val call = request.getWeather(city, license)
 
         call.enqueue(object : Callback<OpenWeatherData> {
             override fun onResponse(call: Call<OpenWeatherData>, response: Response<OpenWeatherData>) {
