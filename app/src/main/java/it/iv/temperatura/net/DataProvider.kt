@@ -1,5 +1,8 @@
 package it.iv.temperatura.net
 
+import it.id.unitoreader.UnitoData
+import it.id.unitoreader.UnitoReaderProvider
+import it.id.unitoreader.UnitoReaderResult
 import it.iv.temperatura.model.TemperatureData
 import it.iv.temperatura.net.netatmo.NetatmoInterface
 import it.iv.temperatura.net.netatmo.model.NetatmoData
@@ -13,10 +16,10 @@ import it.iv.temperatura.user.OpenWeatherUser
 object DataProvider {
 
     var internal: NetatmoData? = null
-    var external: OpenWeatherData? = null
+    var external: UnitoData? = null
 
     fun runRequest(callback: DataProviderInterface) {
-        OpenWeatherProvider.create().getData(OpenWeatherUser.getInstance().getCity(), OpenWeatherUser.getInstance().getToken(), object:
+        /*OpenWeatherProvider.create().getData(OpenWeatherUser.getInstance().getCity(), OpenWeatherUser.getInstance().getToken(), object:
             OpenWeatherInterface {
             override fun onSuccess(result: OpenWeatherData?){
                 external = result
@@ -25,6 +28,13 @@ object DataProvider {
             }
             override fun onError(error: Throwable){
                 error.printStackTrace()
+            }
+        })*/
+
+        UnitoReaderProvider().getDataAsync(object: UnitoReaderResult{
+            override fun onResult(data: UnitoData) {
+                external = data
+                checkIfReady(callback)
             }
         })
 
@@ -41,7 +51,7 @@ object DataProvider {
 
     fun checkIfReady(result: DataProviderInterface){
         if (internal != null && external != null) {
-            val fullData = TemperatureData(internal, external)
+            val fullData = TemperatureData(internal, null, external)
             result.onSuccess(fullData)
         }
     }
